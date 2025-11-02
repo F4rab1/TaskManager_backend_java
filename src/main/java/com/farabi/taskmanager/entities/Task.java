@@ -26,12 +26,14 @@ public class Task {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "stage", length = 20, insertable = false)
+    @Builder.Default
+    @Column(name = "stage", length = 20)
     @ColumnDefault("'in_progress'")
     private String stage = "in_progress";
 
-    @Column(name = "category_id")
-    private Long categoryId;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "completion_date")
     private LocalDate completionDate;
@@ -42,8 +44,9 @@ public class Task {
     @Column(name = "priority")
     private Short priority;
 
+    @Builder.Default
     @ColumnDefault("false")
-    @Column(name = "is_flagged", insertable = false)
+    @Column(name = "is_flagged")
     private Boolean isFlagged  = false;
 
     @Column(name = "created_at", insertable = false, updatable = false)
