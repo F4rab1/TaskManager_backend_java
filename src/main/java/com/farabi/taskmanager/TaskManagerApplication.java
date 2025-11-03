@@ -1,5 +1,6 @@
 package com.farabi.taskmanager;
 
+import com.farabi.taskmanager.dtos.TaskDto;
 import com.farabi.taskmanager.entities.Category;
 import com.farabi.taskmanager.entities.Task;
 import com.farabi.taskmanager.repositories.CategoryRepository;
@@ -16,12 +17,13 @@ public class TaskManagerApplication {
         var taskRepo = context.getBean(TaskRepository.class);
         var categoryRepo = context.getBean(CategoryRepository.class);
 
+        var task = taskRepo.findById(6L).orElseThrow();
 //        var category = Category.builder()
 //                .name("Math")
 //                .build();
 //        categoryRepo.save(category);
 
-        categoryRepo.findAll().forEach(category1 -> System.out.println(category1.toString()));
+//        categoryRepo.findAll().forEach(category1 -> System.out.println(category1.toString()));
 
 //        var task = Task.builder()
 //                .title("Task Manager")
