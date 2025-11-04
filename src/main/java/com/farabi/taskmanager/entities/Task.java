@@ -28,7 +28,7 @@ public class Task {
 
     @Builder.Default
     @Column(name = "stage", length = 20)
-    @ColumnDefault("'in_progress'")
+    @ColumnDefault("in_progress")
     private String stage = "in_progress";
 
     @ManyToOne

@@ -8,16 +8,18 @@ import com.farabi.taskmanager.repositories.TaskRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
+
 @SpringBootApplication
 public class TaskManagerApplication {
 
     public static void main(String[] args) {
-//        SpringApplication.run(TaskManagerApplication.class, args);
-        var context = SpringApplication.run(TaskManagerApplication.class, args);
-        var taskRepo = context.getBean(TaskRepository.class);
-        var categoryRepo = context.getBean(CategoryRepository.class);
-
-        var task = taskRepo.findById(6L).orElseThrow();
+        SpringApplication.run(TaskManagerApplication.class, args);
+//        var context = SpringApplication.run(TaskManagerApplication.class, args);
+//        var taskRepo = context.getBean(TaskRepository.class);
+//        var categoryRepo = context.getBean(CategoryRepository.class);
+//
+//        var task = taskRepo.findById(6L).orElseThrow();
 //        var category = Category.builder()
 //                .name("Math")
 //                .build();
@@ -29,9 +31,10 @@ public class TaskManagerApplication {
 //                .title("Task Manager")
 //                .description("Task Manager")
 //                .priority((short) 2)
+//                .completionDate(LocalDate.now().plusDays(1))
 //                .build();
-
-//        repo.save(task);
+//
+//        taskRepo.save(task);
 //        System.out.println(task);
     }
 
