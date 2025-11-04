@@ -1,12 +1,16 @@
 package com.farabi.taskmanager.controllers;
 
 import com.farabi.taskmanager.dtos.TaskDto;
+import com.farabi.taskmanager.dtos.TaskRequestDto;
 import com.farabi.taskmanager.mappers.TaskMapper;
+import com.farabi.taskmanager.repositories.CategoryRepository;
 import com.farabi.taskmanager.repositories.TaskRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -14,6 +18,7 @@ import java.util.List;
 @RequestMapping("/tasks")
 public class TaskController {
     private final TaskRepository taskRepository;
+    private final CategoryRepository categoryRepository;
     private final TaskMapper taskMapper;
 
     @GetMapping
@@ -51,5 +56,32 @@ public class TaskController {
         }
 
         return ResponseEntity.ok(taskMapper.toDto(task));
+    }
+
+    @PostMapping
+    public ResponseEntity<TaskDto> createTask(
+            @RequestBody TaskRequestDto taskRequestDto,
+            UriComponentsBuilder uriComponentsBuilder
+    ) {
+        if (taskRequestDto.getPriority() == null) {
+            taskRequestDto.setPriority((short) 1);
+        }
+
+        if (taskRequestDto.getCompletionDate() != null && taskRequestDto.getCompletionDate().isBefore(LocalDate.now())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (taskRequestDto.getIsFlagged() == null) {
+            taskRequestDto.setIsFlagged(false);
+        }
+
+        var category = categoryRepository.findById(taskRequestDto.getCategoryId()).orElse(null);
+        var task = taskMapper.toEntity(taskRequestDto);
+        task.setCategory(category);
+        taskRepository.save(task);
+
+        var taskDto = taskMapper.toDto(task);
+        var uri = uriComponentsBuilder.path("/tasks/{id}").buildAndExpand(taskDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(taskDto);
     }
 }
