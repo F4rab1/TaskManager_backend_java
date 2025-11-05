@@ -100,4 +100,15 @@ public class TaskController {
 
         return ResponseEntity.ok(taskMapper.toDto(task));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        var task = taskRepository.findById(id).orElse(null);
+        if (task == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        taskRepository.delete(task);
+        return ResponseEntity.noContent().build();
+    }
 }
