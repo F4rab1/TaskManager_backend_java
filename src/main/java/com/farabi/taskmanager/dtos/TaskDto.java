@@ -1,14 +1,10 @@
 package com.farabi.taskmanager.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.time.LocalDate;
 
-@AllArgsConstructor
-@Getter
-@ToString
+@Data
 public class TaskDto {
     private Long id;
     private String title;

@@ -5,6 +5,7 @@ import com.farabi.taskmanager.dtos.TaskRequestDto;
 import com.farabi.taskmanager.mappers.TaskMapper;
 import com.farabi.taskmanager.repositories.CategoryRepository;
 import com.farabi.taskmanager.repositories.TaskRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +61,7 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<TaskDto> createTask(
-            @RequestBody TaskRequestDto taskRequestDto,
+            @Valid @RequestBody TaskRequestDto taskRequestDto,
             UriComponentsBuilder uriComponentsBuilder
     ) {
         if (taskRequestDto.getPriority() == null) {
