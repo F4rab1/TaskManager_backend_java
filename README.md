@@ -1,3 +1,3 @@
-**Users Endpoint** - Read
+**Tasks Endpoint** - Create, Read, Update, Delete
 
-<img width="967" height="642" alt="Screenshot 2025-11-04 at 13 26 11" src="https://github.com/user-attachments/assets/488419fc-aec3-4acb-960c-a768b08f50f3" />
+<img width="1239" height="603" alt="Screenshot 2025-11-05 at 10 32 05" src="https://github.com/user-attachments/assets/a847a567-d58f-4a74-b1a2-2f8eaf193281" />
