@@ -84,4 +84,20 @@ public class TaskController {
         var uri = uriComponentsBuilder.path("/tasks/{id}").buildAndExpand(taskDto.getId()).toUri();
         return ResponseEntity.created(uri).body(taskDto);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskDto> updateTask(
+            @PathVariable(name = "id") Long id,
+            @RequestBody TaskRequestDto taskRequestDto
+    ) {
+        var task = taskRepository.findById(id).orElse(null);
+        if (task == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        taskMapper.updateTask(taskRequestDto, task);
+        taskRepository.save(task);
+
+        return ResponseEntity.ok(taskMapper.toDto(task));
+    }
 }
