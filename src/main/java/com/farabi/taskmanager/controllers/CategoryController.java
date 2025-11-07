@@ -5,10 +5,8 @@ import com.farabi.taskmanager.mappers.CategoryMapper;
 import com.farabi.taskmanager.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -22,7 +20,6 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
         var entities = categoryRepository.findAll();
-        entities.forEach(e -> System.out.println("Entity: id=" + e.getId() + ", name=" + e.getName()));
 
         var categories = entities.stream()
                 .map(categoryMapper::toDto)
@@ -39,5 +36,18 @@ public class CategoryController {
         }
 
         return ResponseEntity.ok(categoryMapper.toDto(category));
+    }
+
+    @PostMapping
+    public ResponseEntity<CategoryDto> createCategory(
+            @RequestBody CategoryDto categoryDto,
+            UriComponentsBuilder uriComponentsBuilder
+    ) {
+        var category = categoryMapper.toEntity(categoryDto);
+        categoryRepository.save(category);
+
+        categoryDto.setId(category.getId());
+        var uri = uriComponentsBuilder.path("/categories/{id}").buildAndExpand(category.getId()).toUri();
+        return ResponseEntity.created(uri).body(categoryDto);
     }
 }
