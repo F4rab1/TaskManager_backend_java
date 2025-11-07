@@ -50,4 +50,15 @@ public class CategoryController {
         var uri = uriComponentsBuilder.path("/categories/{id}").buildAndExpand(category.getId()).toUri();
         return ResponseEntity.created(uri).body(categoryDto);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategoryById(@PathVariable Long id) {
+        var category = categoryRepository.findById(id).orElse(null);
+        if (category == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        categoryRepository.delete(category);
+        return ResponseEntity.noContent().build();
+    }
 }
