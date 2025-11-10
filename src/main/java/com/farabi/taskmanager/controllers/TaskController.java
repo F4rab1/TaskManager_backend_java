@@ -2,6 +2,7 @@ package com.farabi.taskmanager.controllers;
 
 import com.farabi.taskmanager.dtos.TaskDto;
 import com.farabi.taskmanager.dtos.TaskRequestDto;
+import com.farabi.taskmanager.entities.TaskStage;
 import com.farabi.taskmanager.mappers.TaskMapper;
 import com.farabi.taskmanager.repositories.CategoryRepository;
 import com.farabi.taskmanager.repositories.TaskRepository;
@@ -44,7 +45,7 @@ public class TaskController {
 
         var tasks = taskRepository.findAll()
                 .stream()
-                .filter(task -> stage == null || (task.getStage() != null && task.getStage().equalsIgnoreCase(stage)))
+                .filter(task -> stage == null || stage.equalsIgnoreCase(String.valueOf(task.getStage())))
                 .filter(task -> priority == null || (task.getPriority() != null && task.getPriority().equals(priority)))
                 .filter(task -> is_flagged == null || (task.getIsFlagged() != null && task.getIsFlagged() == is_flagged))
                 .map(taskMapper::toDto)
@@ -81,6 +82,7 @@ public class TaskController {
 
         var category = categoryRepository.findById(taskRequestDto.getCategoryId()).orElse(null);
         var task = taskMapper.toEntity(taskRequestDto);
+        task.setStage(taskRequestDto.getStage() == null ? TaskStage.in_progress : TaskStage.valueOf(taskRequestDto.getStage()));
         task.setCategory(category);
         taskRepository.save(task);
 
