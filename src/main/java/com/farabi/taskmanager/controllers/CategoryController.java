@@ -43,10 +43,16 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDto> createCategory(
+    public ResponseEntity<?> createCategory(
             @Valid @RequestBody CategoryDto categoryDto,
             UriComponentsBuilder uriComponentsBuilder
     ) {
+        if (categoryRepository.existsByName(categoryDto.getName())) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("name", categoryDto.getName() + ": this name for the category is already exists.")
+            );
+        }
+
         var category = categoryMapper.toEntity(categoryDto);
         categoryRepository.save(category);
 
