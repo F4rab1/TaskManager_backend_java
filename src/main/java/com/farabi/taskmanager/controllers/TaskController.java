@@ -6,6 +6,8 @@ import com.farabi.taskmanager.entities.TaskStage;
 import com.farabi.taskmanager.mappers.TaskMapper;
 import com.farabi.taskmanager.repositories.CategoryRepository;
 import com.farabi.taskmanager.repositories.TaskRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +23,14 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/tasks")
+@Tag(name = "Tasks")
 public class TaskController {
     private final TaskRepository taskRepository;
     private final CategoryRepository categoryRepository;
     private final TaskMapper taskMapper;
 
     @GetMapping
+    @Operation(summary = "Get all tasks.")
     public ResponseEntity<List<TaskDto>> getAllTasks(
             @RequestParam(required = false) String stage,
             @RequestParam(required = false) Short priority,
