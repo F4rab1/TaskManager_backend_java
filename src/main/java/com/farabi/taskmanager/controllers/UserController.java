@@ -1,14 +1,13 @@
 package com.farabi.taskmanager.controllers;
 
+import com.farabi.taskmanager.dtos.RegisterUserRequest;
 import com.farabi.taskmanager.dtos.UserDto;
 import com.farabi.taskmanager.mappers.UserMapper;
 import com.farabi.taskmanager.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -38,5 +37,18 @@ public class UserController {
                 .toList();
 
         return ResponseEntity.ok(users);
+    }
+
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(
+            @RequestBody RegisterUserRequest registerUserRequest,
+            UriComponentsBuilder uriBuilder
+    ) {
+        var user = userMapper.toUserEntity(registerUserRequest);
+        user = userRepository.save(user);
+
+        var userDto = userMapper.toUserDto(user);
+        var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(userDto);
     }
 }

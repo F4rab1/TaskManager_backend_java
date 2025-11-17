@@ -20,6 +20,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                         .requestMatchers("/tasks/**").permitAll()
                         .requestMatchers("/categories/**").permitAll()
+                        .requestMatchers("/users/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
                 );

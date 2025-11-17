@@ -1,5 +1,6 @@
 package com.farabi.taskmanager.mappers;
 
+import com.farabi.taskmanager.dtos.RegisterUserRequest;
 import com.farabi.taskmanager.dtos.UserDto;
 import com.farabi.taskmanager.entities.User;
 import org.mapstruct.Mapper;
@@ -9,5 +10,6 @@ import org.mapstruct.Mapper;
 public interface UserMapper {
     UserDto toUserDto(User user);
 
-    User toUserEntity(UserDto userDto);
+    User toUserEntity(RegisterUserRequest registerUserRequest);
 }
+
