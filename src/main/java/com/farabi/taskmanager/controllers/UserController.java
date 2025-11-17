@@ -1,6 +1,7 @@
 package com.farabi.taskmanager.controllers;
 
 import com.farabi.taskmanager.dtos.RegisterUserRequest;
+import com.farabi.taskmanager.dtos.UpdateUserRequest;
 import com.farabi.taskmanager.dtos.UserDto;
 import com.farabi.taskmanager.mappers.UserMapper;
 import com.farabi.taskmanager.repositories.UserRepository;
@@ -50,5 +51,21 @@ public class UserController {
         var userDto = userMapper.toUserDto(user);
         var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
         return ResponseEntity.created(uri).body(userDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable Long id,
+            @RequestBody UpdateUserRequest updateUserRequest
+    ) {
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        userMapper.updateUser(updateUserRequest, user);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(userMapper.toUserDto(user));
     }
 }
