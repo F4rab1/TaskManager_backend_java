@@ -7,10 +7,12 @@ import com.farabi.taskmanager.mappers.UserMapper;
 import com.farabi.taskmanager.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -19,6 +21,7 @@ import java.util.List;
 public class UserController {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
@@ -41,11 +44,18 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(
+    public ResponseEntity<?> createUser(
             @RequestBody RegisterUserRequest registerUserRequest,
             UriComponentsBuilder uriBuilder
     ) {
+        if (userRepository.existsByEmail(registerUserRequest.getEmail())) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("email", "Email is already registered.")
+            );
+        }
+
         var user = userMapper.toUserEntity(registerUserRequest);
+        user.setPassword(passwordEncoder.encode(registerUserRequest.getPassword()));
         user = userRepository.save(user);
 
         var userDto = userMapper.toUserDto(user);
