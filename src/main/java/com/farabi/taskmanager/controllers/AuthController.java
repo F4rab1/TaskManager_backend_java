@@ -2,6 +2,9 @@ package com.farabi.taskmanager.controllers;
 
 import com.farabi.taskmanager.dtos.JwtResponse;
 import com.farabi.taskmanager.dtos.LoginRequestDto;
+import com.farabi.taskmanager.dtos.UserDto;
+import com.farabi.taskmanager.mappers.UserMapper;
+import com.farabi.taskmanager.repositories.UserRepository;
 import com.farabi.taskmanager.services.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,6 +23,8 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody LoginRequestDto loginRequestDto) {
@@ -44,5 +50,18 @@ public class AuthController {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Void> handleBadCredentialsException() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> me() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var email = authentication.getPrincipal().toString();
+
+        var user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(userMapper.toUserDto(user));
     }
 }
