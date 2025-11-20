@@ -6,6 +6,8 @@ import com.farabi.taskmanager.dtos.UserDto;
 import com.farabi.taskmanager.mappers.UserMapper;
 import com.farabi.taskmanager.repositories.UserRepository;
 import com.farabi.taskmanager.services.JwtService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,9 @@ public class AuthController {
     private final UserMapper userMapper;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<JwtResponse> login(
+            @RequestBody LoginRequestDto loginRequestDto,
+            HttpServletResponse response) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequestDto.getEmail(),
@@ -37,9 +41,17 @@ public class AuthController {
 
         var user = userRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow();
 
-        var token = jwtService.generateToken(user);
+        var accessToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        var cookie = new Cookie("RefreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/auth/refresh");
+        cookie.setMaxAge(604800);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(new JwtResponse(accessToken));
     }
 
     @PostMapping("/validate")
@@ -47,11 +59,6 @@ public class AuthController {
         token = token.replace("Bearer ", "");
 
         return jwtService.validateToken(token);
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Void> handleBadCredentialsException() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping("/me")
@@ -65,5 +72,10 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(userMapper.toUserDto(user));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Void> handleBadCredentialsException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
