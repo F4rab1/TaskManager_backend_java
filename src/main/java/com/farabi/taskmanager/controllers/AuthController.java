@@ -1,5 +1,6 @@
 package com.farabi.taskmanager.controllers;
 
+import com.farabi.taskmanager.configs.JwtConfig;
 import com.farabi.taskmanager.dtos.JwtResponse;
 import com.farabi.taskmanager.dtos.LoginRequestDto;
 import com.farabi.taskmanager.dtos.UserDto;
@@ -22,9 +23,9 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final JwtConfig jwtConfig;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
@@ -47,7 +48,7 @@ public class AuthController {
         var cookie = new Cookie("RefreshToken", refreshToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
-        cookie.setMaxAge(604800);
+        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
         cookie.setSecure(true);
         response.addCookie(cookie);
 

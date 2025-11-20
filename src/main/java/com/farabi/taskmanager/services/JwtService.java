@@ -1,30 +1,26 @@
 package com.farabi.taskmanager.services;
 
+import com.farabi.taskmanager.configs.JwtConfig;
 import com.farabi.taskmanager.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 
+@AllArgsConstructor
 @Service
 public class JwtService {
-    @Value("${spring.jwt.secret}")
-    private String secretKey;
+    private final JwtConfig jwtConfig;
 
     public String generateAccessToken(User user) {
-        final long tokenExpiration = 60 * 5; // 5 minutes
-
-        return generateToken(user, tokenExpiration);
+        return generateToken(user, jwtConfig.getAccessTokenExpiration());
     }
 
     public String generateRefreshToken(User user) {
-        final long tokenExpiration = 604800; // 7 days
-
-        return generateToken(user, tokenExpiration);
+        return generateToken(user, jwtConfig.getRefreshTokenExpiration());
     }
 
     public String generateToken(User user, long tokenExpiration) {
@@ -34,7 +30,7 @@ public class JwtService {
                 .claim("name", user.getName())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + tokenExpiration * 1000))
-                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+                .signWith(jwtConfig.getSecretKey())
                 .compact();
     }
 
@@ -55,7 +51,7 @@ public class JwtService {
 
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+                .verifyWith(jwtConfig.getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
