@@ -3,6 +3,7 @@ package com.farabi.taskmanager.controllers;
 import com.farabi.taskmanager.dtos.RegisterUserRequest;
 import com.farabi.taskmanager.dtos.UpdateUserRequest;
 import com.farabi.taskmanager.dtos.UserDto;
+import com.farabi.taskmanager.entities.Role;
 import com.farabi.taskmanager.mappers.UserMapper;
 import com.farabi.taskmanager.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -56,6 +57,7 @@ public class UserController {
 
         var user = userMapper.toUserEntity(registerUserRequest);
         user.setPassword(passwordEncoder.encode(registerUserRequest.getPassword()));
+        user.setRole(Role.USER);
         user = userRepository.save(user);
 
         var userDto = userMapper.toUserDto(user);
