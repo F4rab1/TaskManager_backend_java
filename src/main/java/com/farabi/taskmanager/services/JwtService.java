@@ -1,6 +1,7 @@
 package com.farabi.taskmanager.services;
 
 import com.farabi.taskmanager.configs.JwtConfig;
+import com.farabi.taskmanager.entities.Role;
 import com.farabi.taskmanager.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -48,6 +49,10 @@ public class JwtService {
 
     public Long getUserIdFromToken(String token) {
         return Long.valueOf(getClaims(token).getSubject());
+    }
+
+    public Role getRoleFromToken(String token) {
+        return Role.valueOf(getClaims(token).get("role", String.class));
     }
 
     private Claims getClaims(String token) {

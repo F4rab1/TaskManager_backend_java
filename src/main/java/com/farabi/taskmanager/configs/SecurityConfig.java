@@ -1,5 +1,6 @@
 package com.farabi.taskmanager.configs;
 
+import com.farabi.taskmanager.entities.Role;
 import com.farabi.taskmanager.filters.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -54,13 +55,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                         .requestMatchers("/users/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(c ->
-                        c.authenticationEntryPoint(
-                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
+                .exceptionHandling(c -> {
+                    c.authenticationEntryPoint(
+                            new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+                    c.accessDeniedHandler(((request, response, accessDeniedException) ->
+                            response.setStatus(HttpStatus.FORBIDDEN.value())));
+                });
 
 
         return http.build();
