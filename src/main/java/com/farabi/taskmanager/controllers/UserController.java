@@ -1,5 +1,6 @@
 package com.farabi.taskmanager.controllers;
 
+import com.farabi.taskmanager.dtos.ErrorDto;
 import com.farabi.taskmanager.dtos.RegisterUserRequest;
 import com.farabi.taskmanager.dtos.UpdateUserRequest;
 import com.farabi.taskmanager.dtos.UserDto;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -51,7 +51,7 @@ public class UserController {
     ) {
         if (userRepository.existsByEmail(registerUserRequest.getEmail())) {
             return ResponseEntity.badRequest().body(
-                    Map.of("email", "Email is already registered.")
+                    new ErrorDto("Email already exists!")
             );
         }
 

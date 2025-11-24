@@ -1,6 +1,7 @@
 package com.farabi.taskmanager.controllers;
 
 import com.farabi.taskmanager.dtos.CategoryDto;
+import com.farabi.taskmanager.dtos.ErrorDto;
 import com.farabi.taskmanager.mappers.CategoryMapper;
 import com.farabi.taskmanager.repositories.CategoryRepository;
 import jakarta.validation.Valid;
@@ -49,7 +50,7 @@ public class CategoryController {
     ) {
         if (categoryRepository.existsByName(categoryDto.getName())) {
             return ResponseEntity.badRequest().body(
-                    Map.of("name", categoryDto.getName() + ": this name for the category is already exists.")
+                    new ErrorDto("Category name already exists!")
             );
         }
 
