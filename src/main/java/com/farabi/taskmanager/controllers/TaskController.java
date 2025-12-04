@@ -6,6 +6,7 @@ import com.farabi.taskmanager.entities.TaskStage;
 import com.farabi.taskmanager.mappers.TaskMapper;
 import com.farabi.taskmanager.repositories.CategoryRepository;
 import com.farabi.taskmanager.repositories.TaskRepository;
+import com.farabi.taskmanager.services.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,9 +25,7 @@ import java.util.Map;
 @RequestMapping("/tasks")
 @Tag(name = "Tasks")
 public class TaskController {
-    private final TaskRepository taskRepository;
-    private final CategoryRepository categoryRepository;
-    private final TaskMapper taskMapper;
+    private final TaskService taskService;
 
     @GetMapping
     @Operation(summary = "Get all tasks.")
@@ -36,35 +34,12 @@ public class TaskController {
             @RequestParam(required = false) Short priority,
             @RequestParam(required = false) Boolean is_flagged
     ) {
-        if (stage != null &&
-            !stage.equalsIgnoreCase("in_progress") &&
-            !stage.equalsIgnoreCase("completed")
-        ) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        if (priority != null && (priority < 1 || priority > 5)) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        var tasks = taskRepository.findAll()
-                .stream()
-                .filter(task -> stage == null || stage.equalsIgnoreCase(String.valueOf(task.getStage())))
-                .filter(task -> priority == null || (task.getPriority() != null && task.getPriority().equals(priority)))
-                .filter(task -> is_flagged == null || (task.getIsFlagged() != null && task.getIsFlagged() == is_flagged))
-                .map(taskMapper::toDto)
-                .toList();
-        return ResponseEntity.ok(tasks);
+        return ResponseEntity.ok(taskService.getAllTasks(stage, priority, is_flagged));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
-        var task = taskRepository.findById(id).orElse(null);
-        if (task == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(taskMapper.toDto(task));
+        return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
     @PostMapping
@@ -72,26 +47,9 @@ public class TaskController {
             @Valid @RequestBody TaskRequestDto taskRequestDto,
             UriComponentsBuilder uriComponentsBuilder
     ) {
-        if (taskRequestDto.getPriority() == null) {
-            taskRequestDto.setPriority((short) 1);
-        }
-
-        if (taskRequestDto.getCompletionDate() != null && taskRequestDto.getCompletionDate().isBefore(LocalDate.now())) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        if (taskRequestDto.getIsFlagged() == null) {
-            taskRequestDto.setIsFlagged(false);
-        }
-
-        var category = categoryRepository.findById(taskRequestDto.getCategoryId()).orElse(null);
-        var task = taskMapper.toEntity(taskRequestDto);
-        task.setStage(taskRequestDto.getStage() == null ? TaskStage.in_progress : TaskStage.valueOf(taskRequestDto.getStage()));
-        task.setCategory(category);
-        taskRepository.save(task);
-
-        var taskDto = taskMapper.toDto(task);
+        var taskDto = taskService.createTask(taskRequestDto);
         var uri = uriComponentsBuilder.path("/tasks/{id}").buildAndExpand(taskDto.getId()).toUri();
+
         return ResponseEntity.created(uri).body(taskDto);
     }
 
@@ -100,25 +58,12 @@ public class TaskController {
             @PathVariable(name = "id") Long id,
             @RequestBody TaskRequestDto taskRequestDto
     ) {
-        var task = taskRepository.findById(id).orElse(null);
-        if (task == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        taskMapper.updateTask(taskRequestDto, task);
-        taskRepository.save(task);
-
-        return ResponseEntity.ok(taskMapper.toDto(task));
+        return ResponseEntity.ok(taskService.updateTask(id, taskRequestDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        var task = taskRepository.findById(id).orElse(null);
-        if (task == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        taskRepository.delete(task);
+        taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -128,7 +73,11 @@ public class TaskController {
     ) {
         var errors = new HashMap<String, String>();
 
-        exception.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+        exception.getBindingResult()
+                .getFieldErrors()
+                .forEach(error ->
+                        errors.put(error.getField(), error.getDefaultMessage())
+                );
 
         return ResponseEntity.badRequest().body(errors);
     }
