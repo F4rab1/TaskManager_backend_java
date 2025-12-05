@@ -5,16 +5,13 @@ import com.farabi.taskmanager.dtos.JwtResponse;
 import com.farabi.taskmanager.dtos.LoginRequestDto;
 import com.farabi.taskmanager.dtos.UserDto;
 import com.farabi.taskmanager.mappers.UserMapper;
-import com.farabi.taskmanager.repositories.UserRepository;
-import com.farabi.taskmanager.services.JwtService;
+import com.farabi.taskmanager.services.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,70 +20,46 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
     private final JwtConfig jwtConfig;
-    private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(
             @RequestBody LoginRequestDto loginRequestDto,
             HttpServletResponse response) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequestDto.getEmail(),
-                        loginRequestDto.getPassword()
-                )
-        );
+        var loginResult = authService.login(loginRequestDto);
 
-        var user = userRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow();
-
-        var accessToken = jwtService.generateAccessToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-
-        var cookie = new Cookie("RefreshToken", refreshToken.toString());
+        var refreshToken = loginResult.getRefreshToken().toString();
+        var cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
         cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
         cookie.setSecure(true);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
+        return ResponseEntity.ok(new JwtResponse(loginResult.getAccessToken().toString()));
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<JwtResponse> refreshToken(
             @CookieValue(value = "refreshToken") String refreshToken
     ) {
-        var jwt = jwtService.parseToken(refreshToken);
-        if (jwt == null || jwt.isExpired()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        var user = userRepository.findById(jwt.getUserId()).orElseThrow();
-
-        var accessToken = jwtService.generateAccessToken(user);
+        var accessToken = authService.refresh(refreshToken);
 
         return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
     }
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> me() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var email = authentication.getPrincipal().toString();
-
-        var user = userRepository.findByEmail(email).orElse(null);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
+        var user = authService.getCurrentUser();
 
         return ResponseEntity.ok(userMapper.toUserDto(user));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("RefreshToken", null);
+        Cookie cookie = new Cookie("refreshToken", null);
         cookie.setMaxAge(0);
         cookie.setPath("/auth/refresh");
         cookie.setHttpOnly(true);
