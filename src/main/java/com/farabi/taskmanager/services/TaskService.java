@@ -19,6 +19,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
     private final CategoryRepository categoryRepository;
+    private final AuthService authService;
 
     public List<TaskDto> getAllTasks(String stage, Short priority, Boolean is_flagged) {
         if (stage != null &&
@@ -68,6 +69,7 @@ public class TaskService {
         var task = taskMapper.toEntity(dto);
         task.setStage(dto.getStage() == null ? TaskStage.in_progress : TaskStage.valueOf(dto.getStage()));
 
+        task.setCustomerId(authService.getCurrentUserId());
         task.setCategory(category);
 
         taskRepository.save(task);

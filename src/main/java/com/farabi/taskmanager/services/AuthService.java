@@ -46,9 +46,16 @@ public class AuthService {
 
 
     public User getCurrentUser() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var id = (Long) authentication.getPrincipal();
+        return userRepository.findById(getCurrentUserId()).orElse(null);
+    }
 
-        return userRepository.findById(id).orElse(null);
+    public Long getCurrentUserId() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+
+        return (Long) authentication.getPrincipal();
     }
 }
