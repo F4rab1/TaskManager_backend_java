@@ -33,7 +33,9 @@ public class TaskService {
             throw new IllegalArgumentException("Priority must be between 1 and 5");
         }
 
-        return taskRepository.findAll()
+        Long userId = authService.getCurrentUserId();
+
+        return taskRepository.findAllByCustomerId(userId)
                 .stream()
                 .filter(task -> stage == null || stage.equalsIgnoreCase(String.valueOf(task.getStage())))
                 .filter(task -> priority == null ||
