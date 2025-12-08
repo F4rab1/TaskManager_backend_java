@@ -1,12 +1,5 @@
-package com.farabi.taskmanager.controllers;
+package com.farabi.taskmanager.tasks;
 
-import com.farabi.taskmanager.dtos.TaskDto;
-import com.farabi.taskmanager.dtos.TaskRequestDto;
-import com.farabi.taskmanager.entities.TaskStage;
-import com.farabi.taskmanager.mappers.TaskMapper;
-import com.farabi.taskmanager.repositories.CategoryRepository;
-import com.farabi.taskmanager.repositories.TaskRepository;
-import com.farabi.taskmanager.services.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

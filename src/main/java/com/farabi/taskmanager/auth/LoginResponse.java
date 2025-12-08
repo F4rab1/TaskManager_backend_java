@@ -1,6 +1,5 @@
-package com.farabi.taskmanager.dtos;
+package com.farabi.taskmanager.auth;
 
-import com.farabi.taskmanager.services.Jwt;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,5 +1,6 @@
-package com.farabi.taskmanager.entities;
+package com.farabi.taskmanager.categories;
 
+import com.farabi.taskmanager.tasks.Task;
 import jakarta.persistence.*;
 import lombok.*;
 

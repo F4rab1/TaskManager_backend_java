@@ -1,6 +1,5 @@
-package com.farabi.taskmanager.filters;
+package com.farabi.taskmanager.auth;
 
-import com.farabi.taskmanager.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,14 +1,7 @@
 package com.farabi.taskmanager;
 
-import com.farabi.taskmanager.dtos.TaskDto;
-import com.farabi.taskmanager.entities.Category;
-import com.farabi.taskmanager.entities.Task;
-import com.farabi.taskmanager.repositories.CategoryRepository;
-import com.farabi.taskmanager.repositories.TaskRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.time.LocalDate;
 
 @SpringBootApplication
 public class TaskManagerApplication {

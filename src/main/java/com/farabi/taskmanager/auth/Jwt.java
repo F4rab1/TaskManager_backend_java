@@ -1,4 +1,4 @@
-package com.farabi.taskmanager.services;
+package com.farabi.taskmanager.auth;
 
 import com.farabi.taskmanager.users.Role;
 import io.jsonwebtoken.Claims;

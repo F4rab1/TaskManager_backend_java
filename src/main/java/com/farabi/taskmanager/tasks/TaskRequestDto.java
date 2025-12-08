@@ -1,4 +1,4 @@
-package com.farabi.taskmanager.dtos;
+package com.farabi.taskmanager.tasks;
 
 import com.farabi.taskmanager.validations.Lowercase;
 import jakarta.validation.constraints.NotBlank;

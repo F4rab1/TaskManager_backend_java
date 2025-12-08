@@ -1,6 +1,5 @@
-package com.farabi.taskmanager.repositories;
+package com.farabi.taskmanager.categories;
 
-import com.farabi.taskmanager.entities.Category;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 

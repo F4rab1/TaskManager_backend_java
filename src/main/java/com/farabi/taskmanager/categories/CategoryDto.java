@@ -1,4 +1,4 @@
-package com.farabi.taskmanager.dtos;
+package com.farabi.taskmanager.categories;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

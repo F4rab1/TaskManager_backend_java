@@ -1,7 +1,5 @@
-package com.farabi.taskmanager.services;
+package com.farabi.taskmanager.auth;
 
-import com.farabi.taskmanager.dtos.LoginRequestDto;
-import com.farabi.taskmanager.dtos.LoginResponse;
 import com.farabi.taskmanager.users.User;
 import com.farabi.taskmanager.users.UserRepository;
 import lombok.AllArgsConstructor;

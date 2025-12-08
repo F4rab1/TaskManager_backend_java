@@ -1,5 +1,6 @@
-package com.farabi.taskmanager.entities;
+package com.farabi.taskmanager.tasks;
 
+import com.farabi.taskmanager.categories.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;

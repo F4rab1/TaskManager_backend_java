@@ -1,7 +1,5 @@
-package com.farabi.taskmanager.mappers;
+package com.farabi.taskmanager.categories;
 
-import com.farabi.taskmanager.dtos.CategoryDto;
-import com.farabi.taskmanager.entities.Category;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

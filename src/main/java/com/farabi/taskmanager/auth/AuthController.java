@@ -1,11 +1,7 @@
-package com.farabi.taskmanager.controllers;
+package com.farabi.taskmanager.auth;
 
-import com.farabi.taskmanager.configs.JwtConfig;
-import com.farabi.taskmanager.dtos.JwtResponse;
-import com.farabi.taskmanager.dtos.LoginRequestDto;
 import com.farabi.taskmanager.users.UserDto;
 import com.farabi.taskmanager.users.UserMapper;
-import com.farabi.taskmanager.services.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;

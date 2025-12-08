@@ -1,4 +1,4 @@
-package com.farabi.taskmanager.configs;
+package com.farabi.taskmanager.auth;
 
 import io.jsonwebtoken.security.Keys;
 import lombok.Data;

@@ -1,6 +1,5 @@
-package com.farabi.taskmanager.repositories;
+package com.farabi.taskmanager.tasks;
 
-import com.farabi.taskmanager.entities.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

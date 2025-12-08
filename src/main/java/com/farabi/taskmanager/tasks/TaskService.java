@@ -1,11 +1,7 @@
-package com.farabi.taskmanager.services;
+package com.farabi.taskmanager.tasks;
 
-import com.farabi.taskmanager.dtos.TaskDto;
-import com.farabi.taskmanager.dtos.TaskRequestDto;
-import com.farabi.taskmanager.entities.TaskStage;
-import com.farabi.taskmanager.mappers.TaskMapper;
-import com.farabi.taskmanager.repositories.CategoryRepository;
-import com.farabi.taskmanager.repositories.TaskRepository;
+import com.farabi.taskmanager.categories.CategoryRepository;
+import com.farabi.taskmanager.auth.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

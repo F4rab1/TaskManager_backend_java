@@ -1,8 +1,5 @@
-package com.farabi.taskmanager.services;
+package com.farabi.taskmanager.categories;
 
-import com.farabi.taskmanager.dtos.CategoryDto;
-import com.farabi.taskmanager.mappers.CategoryMapper;
-import com.farabi.taskmanager.repositories.CategoryRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

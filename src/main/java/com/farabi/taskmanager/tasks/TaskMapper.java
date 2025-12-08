@@ -1,8 +1,5 @@
-package com.farabi.taskmanager.mappers;
+package com.farabi.taskmanager.tasks;
 
-import com.farabi.taskmanager.dtos.TaskDto;
-import com.farabi.taskmanager.dtos.TaskRequestDto;
-import com.farabi.taskmanager.entities.Task;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
