@@ -1,9 +1,5 @@
-package com.farabi.taskmanager.mappers;
+package com.farabi.taskmanager.users;
 
-import com.farabi.taskmanager.dtos.RegisterUserRequest;
-import com.farabi.taskmanager.dtos.UpdateUserRequest;
-import com.farabi.taskmanager.dtos.UserDto;
-import com.farabi.taskmanager.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 

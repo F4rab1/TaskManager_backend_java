@@ -1,7 +1,7 @@
 package com.farabi.taskmanager.services;
 
 import com.farabi.taskmanager.configs.JwtConfig;
-import com.farabi.taskmanager.entities.User;
+import com.farabi.taskmanager.users.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

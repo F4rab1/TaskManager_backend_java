@@ -2,8 +2,8 @@ package com.farabi.taskmanager.services;
 
 import com.farabi.taskmanager.dtos.LoginRequestDto;
 import com.farabi.taskmanager.dtos.LoginResponse;
-import com.farabi.taskmanager.entities.User;
-import com.farabi.taskmanager.repositories.UserRepository;
+import com.farabi.taskmanager.users.User;
+import com.farabi.taskmanager.users.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

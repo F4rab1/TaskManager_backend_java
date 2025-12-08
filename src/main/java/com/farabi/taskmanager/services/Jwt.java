@@ -1,6 +1,6 @@
 package com.farabi.taskmanager.services;
 
-import com.farabi.taskmanager.entities.Role;
+import com.farabi.taskmanager.users.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 

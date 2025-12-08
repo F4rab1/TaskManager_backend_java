@@ -1,6 +1,6 @@
 package com.farabi.taskmanager.services;
 
-import com.farabi.taskmanager.repositories.UserRepository;
+import com.farabi.taskmanager.users.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

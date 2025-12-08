@@ -1,6 +1,6 @@
 package com.farabi.taskmanager.configs;
 
-import com.farabi.taskmanager.entities.Role;
+import com.farabi.taskmanager.users.Role;
 import com.farabi.taskmanager.filters.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

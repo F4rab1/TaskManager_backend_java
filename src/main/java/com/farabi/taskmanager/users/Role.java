@@ -1,4 +1,4 @@
-package com.farabi.taskmanager.entities;
+package com.farabi.taskmanager.users;
 
 public enum Role {
     USER,
