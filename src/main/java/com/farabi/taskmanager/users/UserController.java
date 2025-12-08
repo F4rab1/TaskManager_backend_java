@@ -44,6 +44,13 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(id, updateUserRequest));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @ExceptionHandler(DuplicateUserException.class)
     public ResponseEntity<Map<String, String>> handleDuplicateUser() {
         return ResponseEntity.badRequest().body(

@@ -47,4 +47,9 @@ public class UserService {
 
         return userMapper.toUserDto(user);
     }
+
+    public void deleteUser(Long id) {
+        var user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        userRepository.delete(user);
+    }
 }
