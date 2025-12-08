@@ -1,9 +1,7 @@
 package com.farabi.taskmanager.controllers;
 
 import com.farabi.taskmanager.dtos.CategoryDto;
-import com.farabi.taskmanager.dtos.ErrorDto;
-import com.farabi.taskmanager.mappers.CategoryMapper;
-import com.farabi.taskmanager.repositories.CategoryRepository;
+import com.farabi.taskmanager.services.CategoryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,28 +17,16 @@ import java.util.Map;
 @AllArgsConstructor
 @RequestMapping("/categories")
 public class CategoryController {
-    private final CategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
+    private final CategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
-        var entities = categoryRepository.findAll();
-
-        var categories = entities.stream()
-                .map(categoryMapper::toDto)
-                .toList();
-
-        return ResponseEntity.ok(categories);
+        return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id) {
-        var category = categoryRepository.findById(id).orElse(null);
-        if (category == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(categoryMapper.toDto(category));
+        return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
     @PostMapping
@@ -48,28 +34,15 @@ public class CategoryController {
             @Valid @RequestBody CategoryDto categoryDto,
             UriComponentsBuilder uriComponentsBuilder
     ) {
-        if (categoryRepository.existsByName(categoryDto.getName())) {
-            return ResponseEntity.badRequest().body(
-                    new ErrorDto("Category name already exists!")
-            );
-        }
-
-        var category = categoryMapper.toEntity(categoryDto);
-        categoryRepository.save(category);
-
-        categoryDto.setId(category.getId());
+        var category = categoryService.createCategory(categoryDto);
         var uri = uriComponentsBuilder.path("/categories/{id}").buildAndExpand(category.getId()).toUri();
+
         return ResponseEntity.created(uri).body(categoryDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategoryById(@PathVariable Long id) {
-        var category = categoryRepository.findById(id).orElse(null);
-        if (category == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        categoryRepository.delete(category);
+        categoryService.deleteCategoryById(id);
         return ResponseEntity.noContent().build();
     }
 
