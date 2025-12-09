@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -49,17 +48,5 @@ public class UserController {
         userService.deleteUser(id);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @ExceptionHandler(DuplicateUserException.class)
-    public ResponseEntity<Map<String, String>> handleDuplicateUser() {
-        return ResponseEntity.badRequest().body(
-                Map.of("email", "Email is already registered.")
-        );
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Void> handleUserNotFound() {
-        return ResponseEntity.notFound().build();
     }
 }
