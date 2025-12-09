@@ -11,3 +11,9 @@
 **Auth Endpoint**
 
 <img width="1317" height="523" alt="Screenshot 2025-11-21 at 13 05 25" src="https://github.com/user-attachments/assets/d179cb44-6dcb-4f46-b5f0-12a66013437b" />
+
+**Users Endpoint**
+
+<img width="1418" height="324" alt="Screenshot 2025-12-09 at 12 46 58" src="https://github.com/user-attachments/assets/bd83c0a0-8a5d-431f-9f11-fb72bcee4b34" />
+
+<img width="1308" height="696" alt="Screenshot 2025-12-09 at 12 46 37" src="https://github.com/user-attachments/assets/c2713734-ed27-4bf3-9d20-bf5d6ba153b4" />
