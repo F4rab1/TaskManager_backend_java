@@ -75,6 +75,8 @@ public class TaskService {
         return taskMapper.toDto(task);
     }
 
+
+
     public TaskDto updateTask(Long id, TaskRequestDto dto) {
         var task = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found: " + id));
 
@@ -88,5 +90,25 @@ public class TaskService {
         var task = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found: " + id));
 
         taskRepository.delete(task);
+    }
+
+    public TaskDto completeTask(Long id) {
+        Long currentUserId = authService.getCurrentUserId();
+
+        var task = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found: " + id));
+
+        if (!task.getCustomerId().equals(currentUserId)) {
+            throw new IllegalArgumentException("Task can only be completed by the current user");
+        }
+
+        if (task.getStage() == TaskStage.completed) {
+            throw new IllegalArgumentException("Task already completed");
+        }
+
+        task.setStage(TaskStage.completed);
+        task.setCompletionDate(LocalDate.now());
+        taskRepository.save(task);
+
+        return taskMapper.toDto(task);
     }
 }
