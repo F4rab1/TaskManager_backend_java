@@ -6,7 +6,9 @@
 
 **Categories Endpoint** - Create, Read, Delete
 
-<img width="1272" height="579" alt="Screenshot 2025-11-08 at 17 10 31" src="https://github.com/user-attachments/assets/d173405e-d003-4fe9-8783-39bbd8b77994" />
+<img width="1420" height="385" alt="Screenshot 2025-12-10 at 18 56 16" src="https://github.com/user-attachments/assets/980d9934-a729-4b6f-93a3-0bc62c2d5ddc" />
+
+<img width="1291" height="698" alt="Screenshot 2025-12-10 at 18 56 36" src="https://github.com/user-attachments/assets/1e877e9f-e083-4bee-9e8f-920e512fae49" />
 
 **Auth Endpoint**
 
