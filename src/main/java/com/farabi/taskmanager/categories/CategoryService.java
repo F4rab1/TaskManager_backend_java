@@ -36,6 +36,15 @@ public class CategoryService {
         return categoryDto;
     }
 
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
+        var category = categoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Category not found: " + id));
+
+        category.setName(categoryDto.getName());
+        categoryRepository.save(category);
+
+        return categoryMapper.toDto(category);
+    }
+
     public void deleteCategoryById(Long id) {
         var category = categoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Category not found: " + id));
 

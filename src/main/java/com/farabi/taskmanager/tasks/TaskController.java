@@ -43,17 +43,17 @@ public class TaskController {
         return ResponseEntity.created(uri).body(taskDto);
     }
 
-    @PatchMapping("/{id}/complete")
-    public ResponseEntity<TaskDto> completeTask(@PathVariable Long id) {
-        return ResponseEntity.ok(taskService.completeTask(id));
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<TaskDto> updateTask(
             @PathVariable(name = "id") Long id,
             @RequestBody TaskRequestDto taskRequestDto
     ) {
         return ResponseEntity.ok(taskService.updateTask(id, taskRequestDto));
+    }
+
+    @PatchMapping("/{id}/complete")
+    public ResponseEntity<TaskDto> completeTask(@PathVariable Long id) {
+        return ResponseEntity.ok(taskService.completeTask(id));
     }
 
     @DeleteMapping("/{id}")

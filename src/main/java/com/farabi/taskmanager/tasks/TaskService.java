@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 public class TaskService {
-
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
     private final CategoryRepository categoryRepository;
@@ -86,12 +85,6 @@ public class TaskService {
         return taskMapper.toDto(task);
     }
 
-    public void deleteTask(Long id) {
-        var task = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found: " + id));
-
-        taskRepository.delete(task);
-    }
-
     public TaskDto completeTask(Long id) {
         Long currentUserId = authService.getCurrentUserId();
 
@@ -110,5 +103,11 @@ public class TaskService {
         taskRepository.save(task);
 
         return taskMapper.toDto(task);
+    }
+
+    public void deleteTask(Long id) {
+        var task = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found: " + id));
+
+        taskRepository.delete(task);
     }
 }
