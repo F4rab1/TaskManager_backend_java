@@ -1,5 +1,6 @@
 package com.farabi.taskmanager.categories;
 
+import com.farabi.taskmanager.tasks.TaskDto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,11 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id) {
         return ResponseEntity.ok(categoryService.getCategoryById(id));
+    }
+
+    @GetMapping("/{id}/tasks")
+    public ResponseEntity<List<TaskDto>> getTasksByCategoryId(@PathVariable Long id) {
+        return ResponseEntity.ok(categoryService.getTasksByCategoryId(id));
     }
 
     @PostMapping

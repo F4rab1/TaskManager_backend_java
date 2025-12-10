@@ -1,5 +1,9 @@
 package com.farabi.taskmanager.categories;
 
+import com.farabi.taskmanager.auth.AuthService;
+import com.farabi.taskmanager.tasks.TaskDto;
+import com.farabi.taskmanager.tasks.TaskMapper;
+import com.farabi.taskmanager.tasks.TaskRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +15,9 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private final AuthService authService;
+    private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
 
     public List<CategoryDto> getAllCategories() {
         return categoryRepository.findAll().stream().map(categoryMapper::toDto).toList();
@@ -22,6 +29,17 @@ public class CategoryService {
         return categoryMapper.toDto(category);
     }
 
+    public List<TaskDto> getTasksByCategoryId(Long categoryId) {
+        categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("Category not found: " + categoryId));
+
+        long userId = authService.getCurrentUserId();
+
+        var tasks = taskRepository.findAllByCategoryIdAndCustomerId(categoryId, userId);
+
+        return tasks.stream()
+                .map(taskMapper::toDto)
+                .toList();
+    }
 
     public CategoryDto createCategory(@Valid CategoryDto categoryDto) {
         if (categoryRepository.existsByName(categoryDto.getName())) {
