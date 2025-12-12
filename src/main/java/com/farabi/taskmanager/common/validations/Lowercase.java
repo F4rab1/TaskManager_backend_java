@@ -1,4 +1,4 @@
-package com.farabi.taskmanager.validations;
+package com.farabi.taskmanager.common.validations;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

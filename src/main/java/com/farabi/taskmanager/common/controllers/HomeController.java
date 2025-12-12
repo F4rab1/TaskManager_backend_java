@@ -1,4 +1,4 @@
-package com.farabi.taskmanager.controllers;
+package com.farabi.taskmanager.common.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package com.farabi.taskmanager.dtos;
+package com.farabi.taskmanager.common.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

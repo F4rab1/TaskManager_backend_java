@@ -1,6 +1,6 @@
-package com.farabi.taskmanager.controllers;
+package com.farabi.taskmanager.common.controllers;
 
-import com.farabi.taskmanager.dtos.ApiErrorResponse;
+import com.farabi.taskmanager.common.dtos.ApiErrorResponse;
 import com.farabi.taskmanager.users.DuplicateUserException;
 import com.farabi.taskmanager.users.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
